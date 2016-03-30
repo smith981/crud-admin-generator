@@ -38,12 +38,12 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 
 		'dbs.options' => array(
 			'db' => array(
-				'driver'   => 'pdo_mysql',
+				'driver'   => 'pdo_sqlsrv',
 				'dbname'   => 'DATABASE_NAME',
 				'host'     => '127.0.0.1',
 				'user'     => 'DATABASE_USER',
 				'password' => 'DATABASE_PASS',
-				'charset'  => 'utf8',
+				//'charset'  => 'utf8',
 			),
 		)
 ));

@@ -68,9 +68,21 @@ __TABLECOLUMNS_TYPE_ARRAY__
         $i = $i + 1;
     }
     
-    $recordsTotal = $app['db']->executeQuery("SELECT * FROM `__TABLENAME__`" . $whereClause . $orderClause)->rowCount();
+    $recordsTotal = $app['db']->executeQuery("SELECT * FROM __TABLENAME__" . $whereClause . $orderClause)->rowCount();
     
-    $find_sql = "SELECT * FROM `__TABLENAME__`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    if($orderClause == '') {
+        $orderClause = ' ORDER BY id ';
+    }
+
+    if($rowsPerPage == '') {
+        $rowsPerPage = 10;
+    }
+
+    if($index == '') {
+        $index = 0;
+    }
+
+    $find_sql = "SELECT * FROM __TABLENAME__". $whereClause . $orderClause . " OFFSET $index ROWS FETCH NEXT $rowsPerPage ROWS ONLY";
     $rows_sql = $app['db']->fetchAll($find_sql, array());
 
     foreach($rows_sql as $row_key => $row_sql){
@@ -170,7 +182,7 @@ __FIELDS_FOR_FORM__
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "INSERT INTO `__TABLENAME__` (__INSERT_QUERY_FIELDS__) VALUES (__INSERT_QUERY_VALUES__)";
+            $update_query = "INSERT INTO __TABLENAME__ (__INSERT_QUERY_FIELDS__) VALUES (__INSERT_QUERY_VALUES__)";
             $app['db']->executeUpdate($update_query, array(__INSERT_EXECUTE_FIELDS__));            
 
 
@@ -196,7 +208,7 @@ __FIELDS_FOR_FORM__
 
 $app->match('/__TABLENAME__/edit/{id}', function ($id) use ($app) {
 
-    $find_sql = "SELECT * FROM `__TABLENAME__` WHERE `__TABLE_PRIMARYKEY__` = ?";
+    $find_sql = "SELECT * FROM __TABLENAME__ WHERE __TABLE_PRIMARYKEY__ = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($id));
 
     if(!$row_sql){
@@ -229,7 +241,7 @@ __FIELDS_FOR_FORM__
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $update_query = "UPDATE `__TABLENAME__` SET __UPDATE_QUERY_FIELDS__ WHERE `__TABLE_PRIMARYKEY__` = ?";
+            $update_query = "UPDATE __TABLENAME__ SET __UPDATE_QUERY_FIELDS__ WHERE __TABLE_PRIMARYKEY__ = ?";
             $app['db']->executeUpdate($update_query, array(__UPDATE_EXECUTE_FIELDS__, $id));            
 
 
@@ -256,11 +268,11 @@ __FIELDS_FOR_FORM__
 
 $app->match('/__TABLENAME__/delete/{id}', function ($id) use ($app) {
 
-    $find_sql = "SELECT * FROM `__TABLENAME__` WHERE `__TABLE_PRIMARYKEY__` = ?";
+    $find_sql = "SELECT * FROM __TABLENAME__ WHERE __TABLE_PRIMARYKEY__ = ?";
     $row_sql = $app['db']->fetchAssoc($find_sql, array($id));
 
     if($row_sql){
-        $delete_query = "DELETE FROM `__TABLENAME__` WHERE `__TABLE_PRIMARYKEY__` = ?";
+        $delete_query = "DELETE FROM __TABLENAME__ WHERE __TABLE_PRIMARYKEY__ = ?";
         $app['db']->executeUpdate($delete_query, array($id));
 
         $app['session']->getFlashBag()->add(
