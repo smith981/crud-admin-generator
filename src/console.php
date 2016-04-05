@@ -25,7 +25,7 @@ $console
 	->setDescription("Generate administrator")
 	->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
 
-		$getTablesQuery = "SHOW TABLES";
+		$getTablesQuery = "SELECT name, object_id, schema_id FROM sys.tables";
 		$getTablesResult = $app['db']->fetchAll($getTablesQuery, array());
 
 		$_dbTables = array();
@@ -37,12 +37,13 @@ $console
 
 			$dbTables[] = array(
 				"name" => reset($getTableResult),
+				"object_id" => $getTableResult['object_id'],
 				"columns" => array()
 			);
 		}
 
 		foreach($dbTables as $dbTableKey => $dbTable){
-			$getTableColumnsQuery = "SHOW COLUMNS FROM `" . $dbTable['name'] . "`";
+			$getTableColumnsQuery = "SELECT *, st.name as column_type FROM sys.columns c inner join sys.types st on c.system_type_id = st.system_type_id where object_id = '" . intval($dbTable['object_id']) . "'";
 			$getTableColumnsResult = $app['db']->fetchAll($getTableColumnsQuery, array());
 
 			foreach($getTableColumnsResult as $getTableColumnResult){
@@ -65,7 +66,7 @@ $console
 			$primary_keys = 0;
 			$primary_keys_auto = 0;
 			foreach($dbTable['columns'] as $column){
-				if($column['Key'] == "PRI"){
+				if($column['is_identity'] == "1"){
 					$primary_keys++;
 				}
 				if($column['Extra'] == "auto_increment"){
@@ -79,22 +80,24 @@ $console
 
 					$external_table = false;
 
-					if($primary_keys > 1 && $primary_keys_auto == 1){
-						if($column['Extra'] == "auto_increment"){
-							$primary_key = $column['Field'];
-						}
+					//if($primary_keys > 1 && $primary_keys_auto == 1){
+					//	if($column['Extra'] == "auto_increment"){
+					if($column['is_identity'] == 1) {
+						$primary_key = $column['name'];
 					}
-					else if($primary_keys == 1){
-						if($column['Key'] == "PRI"){
-							$primary_key = $column['Field'];
-						}
-					}
-					else{
-						continue 2;
-					}
+					//	}
+					//}
+					//else if($primary_keys == 1){
+					//	if($column['Key'] == "PRI"){
+					//		$primary_key = $column['Field'];
+					//	}
+					//}
+					//else{
+					//	continue 2;
+					//}
 
-					if(substr($column['Field'], -3) == "_id"){
-						$_table_name = substr($column['Field'], 0, -3);
+					if(substr($column['name'], -3) == "_id"){
+						$_table_name = substr($column['name'], 0, -3);
 
 						if(in_array($_table_name, $_dbTables)){
 							$external_table = $_table_name;
@@ -102,12 +105,12 @@ $console
 					}
 
 					$table_columns[] = array(
-						"name" => $column['Field'],
-						"primary" => $column['Field'] == $primary_key ? true : false,
-						"nullable" => $column['Null'] == "NO" ? true : false,
-						"auto" => $column['Extra'] == "auto_increment" ? true : false,
-						"external" => $column['Field'] != $primary_key ? $external_table : false,
-						"type" => $column['Type']
+						"name" => $column['name'],
+						"primary" => $column['name'] == $primary_key ? true : false,
+						"nullable" => $column['is_nullable'] == "0" ? true : false,
+						"auto" => $column['is_identity'] == "1" ? true : false,
+						"external" => $column['name'] != $primary_key ? $external_table : false,
+						"type" => $column['column_type']
 					);
 				}
 
