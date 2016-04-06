@@ -95,12 +95,10 @@ Now, execute the command that will generate the CRUD backend:
 ## Known Issues
 * If you have more than 6 columns in a table, your index route may throw a JS error and it will not list the contents. The workaround is to edit the generated code in the index.php file in web/controllers/yourEntityName. You just need to comment out the extraneous columns in the $table_columns variable inside the index route. For example
 
-~~~
+```php
+... web/controllers/Expert/index.php
 $app->match('/Expert', function () use ($app) {
     
-/**
- * ... web/controllers/Expert/index.php
- */
     $table_columns = array(
         'id', 
         'status', 
@@ -114,7 +112,7 @@ $app->match('/Expert', function () use ($app) {
     );
 
     $primary_key = "id";    
-~~~
+```
 
 
 The command generates one menu section for each database table. **Now will be much easier to list, create, edit and delete rows!**
