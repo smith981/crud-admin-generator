@@ -114,7 +114,6 @@ If you have more than 6 columns in a table, your index route may throw a JS erro
 
 ```php
 <?php
-//...
 //... web/controllers/Expert/index.php
 $app->match('/Expert', function () use ($app) {
     
