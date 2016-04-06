@@ -20,7 +20,7 @@ Installation
 
 Clone the repository
 
-    git clone https://github.com/jonseg/crud-admin-generator.git admingenerator
+    git clone https://github.com/smith981/crud-admin-generator.git admingenerator
 
     cd admingenerator
 
@@ -60,20 +60,22 @@ Generate CRUD backend
 ---------------------
 
 Edit the file /path_to/admingenerator/src/app.php and set your database conection data:
-
-    $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-        'dbs.options' => array(
-            'db' => array(
-                'driver'   => 'pdo_mysql',
-                'dbname'   => 'DATABASE_NAME',
-                'host'     => 'localhost',
-                'user'     => 'DATABASE_USER',
-                'password' => 'DATABASE_PASS',
-                'charset'  => 'utf8',
-            ),
-        )
-    ));
-
+```php
+<?php
+//...
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'dbs.options' => array(
+        'db' => array(
+            'driver'   => 'pdo_mysql',
+            'dbname'   => 'DATABASE_NAME',
+            'host'     => 'localhost',
+            'user'     => 'DATABASE_USER',
+            'password' => 'DATABASE_PASS',
+            'charset'  => 'utf8',
+        ),
+    )
+));
+```
 
 You need to set the url of the resources folder.
 
@@ -92,31 +94,6 @@ Now, execute the command that will generate the CRUD backend:
 
 **This is it!** Now access with your favorite web browser.
 
-## Known Issues
-* If you have more than 6 columns in a table, your index route may throw a JS error and it will not list the contents. The workaround is to edit the generated code in the index.php file in web/controllers/yourEntityName. You just need to comment out the extraneous columns in the $table_columns variable inside the index route. For example
-
-~~~
-$app->match('/Expert', function () use ($app) {
-    
-/**
- * ... web/controllers/Expert/index.php
- */
-    $table_columns = array(
-        'id', 
-        'status', 
-        'firstName', 
-        'lastName', 
-        'position', 
-        'photoUrl', 
-        //'education', //Remove these two columns so they don't show up in the index view
-        //'biography', 
-//...
-    );
-
-    $primary_key = "id";    
-~~~
-
-
 The command generates one menu section for each database table. **Now will be much easier to list, create, edit and delete rows!**
 
 
@@ -130,6 +107,30 @@ The generated code is fully configurable and editable, you just have to edit the
 
 It has generated a folder for each database table.
 
+Known Issues
+------------
+
+If you have more than 6 columns in a table, your index route may throw a JS error and it will not list the contents. The workaround is to edit the generated code in the index.php file in web/controllers/yourEntityName. You just need to comment out the extraneous columns in the $table_columns variable inside the index route. For example
+
+```php
+<?php
+//... web/controllers/Expert/index.php
+$app->match('/Expert', function () use ($app) {
+    
+    $table_columns = array(
+        'id', 
+        'status', 
+        'firstName', 
+        'lastName', 
+        'position', 
+        'photoUrl', 
+        //'education', //Remove these two columns so they don't show up in the index view
+        //'biography', 
+//...
+    );
+
+    $primary_key = "id";    
+```
 
 Contributing
 ------------
