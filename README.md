@@ -61,18 +61,20 @@ Generate CRUD backend
 
 Edit the file /path_to/admingenerator/src/app.php and set your database conection data:
 ```php
-    $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-        'dbs.options' => array(
-            'db' => array(
-                'driver'   => 'pdo_mysql',
-                'dbname'   => 'DATABASE_NAME',
-                'host'     => 'localhost',
-                'user'     => 'DATABASE_USER',
-                'password' => 'DATABASE_PASS',
-                'charset'  => 'utf8',
-            ),
-        )
-    ));
+<?php
+//...
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'dbs.options' => array(
+        'db' => array(
+            'driver'   => 'pdo_mysql',
+            'dbname'   => 'DATABASE_NAME',
+            'host'     => 'localhost',
+            'user'     => 'DATABASE_USER',
+            'password' => 'DATABASE_PASS',
+            'charset'  => 'utf8',
+        ),
+    )
+));
 ```
 
 You need to set the url of the resources folder.
@@ -111,6 +113,8 @@ Known Issues
 If you have more than 6 columns in a table, your index route may throw a JS error and it will not list the contents. The workaround is to edit the generated code in the index.php file in web/controllers/yourEntityName. You just need to comment out the extraneous columns in the $table_columns variable inside the index route. For example
 
 ```php
+<?php
+//...
 //... web/controllers/Expert/index.php
 $app->match('/Expert', function () use ($app) {
     
