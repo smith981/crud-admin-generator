@@ -43,7 +43,7 @@ $console
 		}
 
 		foreach($dbTables as $dbTableKey => $dbTable){
-			$getTableColumnsQuery = "SELECT *, st.name as column_type FROM sys.columns c inner join sys.types st on c.system_type_id = st.system_type_id where object_id = '" . intval($dbTable['object_id']) . "'";
+			$getTableColumnsQuery = "SELECT object_id, c.name as name, st.name as column_type, c.precision, c.scale, c.is_nullable, c.is_ansi_padded, c.is_identity, c.is_rowguidcol, c.is_computed, c.is_xml_document, c.is_column_set FROM sys.columns c inner join sys.types st on c.system_type_id = st.system_type_id where st.name != 'sysname' and object_id = '" . intval($dbTable['object_id']) . "'";
 			$getTableColumnsResult = $app['db']->fetchAll($getTableColumnsQuery, array());
 
 			foreach($getTableColumnsResult as $getTableColumnResult){
