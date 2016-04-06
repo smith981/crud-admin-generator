@@ -60,7 +60,7 @@ Generate CRUD backend
 ---------------------
 
 Edit the file /path_to/admingenerator/src/app.php and set your database conection data:
-
+```php
     $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'dbs.options' => array(
             'db' => array(
@@ -73,7 +73,7 @@ Edit the file /path_to/admingenerator/src/app.php and set your database conectio
             ),
         )
     ));
-
+```
 
 You need to set the url of the resources folder.
 
@@ -96,7 +96,7 @@ Now, execute the command that will generate the CRUD backend:
 * If you have more than 6 columns in a table, your index route may throw a JS error and it will not list the contents. The workaround is to edit the generated code in the index.php file in web/controllers/yourEntityName. You just need to comment out the extraneous columns in the $table_columns variable inside the index route. For example
 
 ```php
-... web/controllers/Expert/index.php
+//... web/controllers/Expert/index.php
 $app->match('/Expert', function () use ($app) {
     
     $table_columns = array(
