@@ -176,9 +176,9 @@ $console
 					$TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => '', \n";
 					$TABLECOLUMNS_INITIALDATA_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => \$row_sql['".$table_column['name']."'], \n";
 
-					$INSERT_QUERY_FIELDS[] = "`" . $table_column['name'] . "`";
+					$INSERT_QUERY_FIELDS[] = $table_column['name'];
 					$INSERT_EXECUTE_FIELDS[] = "\$data['" . $table_column['name'] . "']";
-					$UPDATE_QUERY_FIELDS[] = "`" . $table_column['name'] . "` = ?";
+					$UPDATE_QUERY_FIELDS[] = $table_column['name'] . " = ?";
 					$UPDATE_EXECUTE_FIELDS[] = "\$data['" . $table_column['name'] . "']";
 
 					if(strpos($table_column['type'], 'text') !== false){
@@ -229,7 +229,7 @@ $console
 
 					$EXTERNALS_FOR_LIST .= "" .
 					"\t\t\t" . $external_cond . "(\$table_columns[\$i] == '" . $table_column['name'] . "'){" . "\n" .
-					"\t\t\t" . "    \$findexternal_sql = 'SELECT `" . $external_select_field . "` FROM `" . $table_column['external'] . "` WHERE `" . $external_primary_key . "` = ?';" . "\n" .
+					"\t\t\t" . "    \$findexternal_sql = 'SELECT " . $external_select_field . " FROM " . $table_column['external'] . " WHERE " . $external_primary_key . " = ?';" . "\n" .
 					"\t\t\t" . "    \$findexternal_row = \$app['db']->fetchAssoc(\$findexternal_sql, array(\$row_sql[\$table_columns[\$i]]));" . "\n" .
 					"\t\t\t" . "    \$rows[\$row_key][\$table_columns[\$i]] = \$findexternal_row['" . $external_select_field . "'];" . "\n" .
 					"\t\t\t" . "}" . "\n";
@@ -237,7 +237,7 @@ $console
 
 					$EXTERNALSFIELDS_FOR_FORM .= "" .
 					"\t" . "\$options = array();" . "\n" .
-					"\t" . "\$findexternal_sql = 'SELECT `" . $external_primary_key . "`, `" . $external_select_field . "` FROM `" . $table_column['external'] . "`';" . "\n" .
+					"\t" . "\$findexternal_sql = 'SELECT " . $external_primary_key . ", " . $external_select_field . " FROM " . $table_column['external'] . "';" . "\n" .
 					"\t" . "\$findexternal_rows = \$app['db']->fetchAll(\$findexternal_sql, array());" . "\n" .
 					"\t" . "foreach(\$findexternal_rows as \$findexternal_row){" . "\n" .
 					"\t" . "    \$options[\$findexternal_row['" . $external_primary_key . "']] = \$findexternal_row['" . $external_select_field . "'];" . "\n" .
