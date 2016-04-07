@@ -1,7 +1,7 @@
 CRUD Admin Generator
 ===================
 
-# IN DEVELOPMENT. NOT WORKING. DO NOT USE. YET.
+# Note: To get this working, I had to remove schema validation in Symfony/Translation XLiffFileLoader.php.
 
 What is CRUD Admin Generator?
 -----------------------------
@@ -14,6 +14,7 @@ What is CRUD Admin Generator?
 
 It has been programmed with the Silex framework, so the resulting code is PHP.
 
+It also comes with Doctrine ORM so you can easily edit the generated code to work with objects directly rather than SQL. This makes things like JOINs much easier.
 
 Installation
 ------------
@@ -75,6 +76,20 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         ),
     )
 ));
+```
+
+Edit the file /path_to/admingenerator/bootstrap.php to insert your database config info:
+```php
+<?php
+// database configuration parameters
+$conn = array(
+    'driver' => 'pdo_sqlite',
+    'path' => __DIR__ . '/db.sqlite', //don't need this except for SQLITE
+    //'dbname'   => '',
+    //'host'     => '',
+    //'user'     => '',
+    //'password' => '',
+);
 ```
 
 You need to set the url of the resources folder.
