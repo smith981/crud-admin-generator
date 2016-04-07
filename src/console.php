@@ -69,9 +69,6 @@ $console
 				if($column['is_identity'] == "1"){
 					$primary_keys++;
 				}
-				if($column['Extra'] == "auto_increment"){
-					$primary_keys_auto++;
-				}
 			}
 
 			if($primary_keys === 1 || ($primary_keys > 1 && $primary_keys_auto === 1)){
@@ -80,21 +77,9 @@ $console
 
 					$external_table = false;
 
-					//if($primary_keys > 1 && $primary_keys_auto == 1){
-					//	if($column['Extra'] == "auto_increment"){
 					if($column['is_identity'] == 1) {
 						$primary_key = $column['name'];
 					}
-					//	}
-					//}
-					//else if($primary_keys == 1){
-					//	if($column['Key'] == "PRI"){
-					//		$primary_key = $column['Field'];
-					//	}
-					//}
-					//else{
-					//	continue 2;
-					//}
 
 					if(substr($column['name'], -3) == "_id"){
 						$_table_name = substr($column['name'], 0, -3);
@@ -113,18 +98,15 @@ $console
 						"type" => $column['column_type']
 					);
 				}
-
 			}
 			else{
 				continue;
 			}
 
-
 			$tables[$table_name] = array(
 				"primary_key" => $primary_key,
 				"columns" => $table_columns
 			);
-
 		}
 
 		$MENU_OPTIONS = "";
